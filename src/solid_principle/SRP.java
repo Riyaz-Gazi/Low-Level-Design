@@ -1,34 +1,60 @@
 package solid_principle;
 
-class Book {
-    private String title;
-    private String author;
+// SRP Violation
+class UserServiceViolation {
 
-    public Book(String title, String author) {
-        this.title = title;
-        this.author = author;
+    public void createUser(String name) {
+        savedToDatabase(name);
+        sendEmail(name);
+
+
     }
 
-    public String getTitle() {
-        return title;
+    public void savedToDatabase(String name) {
+        System.out.println("Saved user database successfully");
     }
 
-    public String getAuthor() {
-        return author;
+    public void sendEmail(String name) {
+        System.out.println("Email send successfully");
+    }
+
+}
+
+class UserService {
+    private final UserRepository userRepository;
+    private final EmailService emailService;
+
+    UserService(UserRepository userRepository, EmailService emailService) {
+        this.userRepository = userRepository;
+        this.emailService = emailService;
+    }
+
+    public void savedUser(String name) {
+        userRepository.save(name);
+        emailService.send();
     }
 }
 
-// Class is responsible for only print the book
-class PrintBook {
-    public void printBook(Book book) {
-        System.out.println("Title : " + book.getTitle() + ", Author : " + book.getAuthor());
+class UserRepository {
+    public void save(String name) {
+        System.out.println("saved user with name " + name + " database successfully");
+    }
+}
+
+class EmailService {
+    public void send() {
+        System.out.println("Email Send successfully");
     }
 }
 
 public class SRP {
     public static void main(String[] args) {
-        Book book = new Book("Java Programming", "Devs");
-        PrintBook printBook = new PrintBook();
-        printBook.printBook(book);
+        // SRP Violation
+        UserServiceViolation userServiceViolation = new UserServiceViolation();
+        userServiceViolation.createUser("riyaz");
+
+        // SRP
+        UserService userService = new UserService(new UserRepository(),new EmailService());
+        userService.savedUser("Mehak");
     }
 }
