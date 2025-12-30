@@ -1,78 +1,99 @@
 package design_pattern.singleton_pattern;
 
 // Thread Safe Eager Loading
-//class JudgeAnalytics{
-//    private static final JudgeAnalytics judgeAnalytics = new JudgeAnalytics();
-//    private JudgeAnalytics(){
-//
-//    }
-//    public static JudgeAnalytics getInstance(){
-//        return judgeAnalytics;
-//    }
-//}
+class EagerSingleton {
+    private static final EagerSingleton instance = new EagerSingleton();
+
+    private EagerSingleton() {
+
+    }
+
+    public static EagerSingleton getInstance() {
+        return instance;
+    }
+}
 
 // Lazy Loading Not Thread Safe
-//class JudgeAnalytics{
-//    private static JudgeAnalytics judgeAnalytics;
-//    private JudgeAnalytics(){
-//
-//    }
-//    public static JudgeAnalytics getInstance(){
-//        if(judgeAnalytics == null){
-//            judgeAnalytics = new JudgeAnalytics();
-//        }
-//        return judgeAnalytics;
-//    }
-//}
+class LazySingleton {
+    private static LazySingleton instance;
 
-//class JudgeAnalytics{
-//    private static JudgeAnalytics judgeAnalytics;
-//    private JudgeAnalytics(){
-//
-//    }
-//    public static synchronized JudgeAnalytics getInstance(){
-//        if(judgeAnalytics == null){
-//            judgeAnalytics = new JudgeAnalytics();
-//        }
-//        return judgeAnalytics;
-//    }
-//}
+    private LazySingleton() {
 
+    }
 
-//class JudgeAnalytics {
-//    private static volatile JudgeAnalytics judgeAnalytics;
-//    private JudgeAnalytics() {
-//
-//    }
-//    public static JudgeAnalytics getInstance() {
-//        if (judgeAnalytics == null) {
-//            synchronized (JudgeAnalytics.class) {
-//                if (judgeAnalytics == null) {
-//                    judgeAnalytics = new JudgeAnalytics();
-//                }
-//            }
-//        }
-//        return judgeAnalytics;
-//    }
-//}
+    public static LazySingleton getInstance() {
+        if (instance == null) {
+            instance = new LazySingleton();
+        }
+        return instance;
+    }
+}
 
-class JudgeAnalytics {
-    private JudgeAnalytics() {}
+// Lazy Loading Thread Safe
 
-    // Method to hold the Singleton Instance
+class LazySingletonSynchronization {
+    private static LazySingletonSynchronization instance;
+
+    private LazySingletonSynchronization() {
+
+    }
+
+    public static synchronized LazySingletonSynchronization getInstance() {
+        if (instance == null) {
+            instance = new LazySingletonSynchronization();
+        }
+        return instance;
+    }
+}
+
+// Double check locking
+class Singleton {
+    private static volatile Singleton instance;
+
+    private Singleton() {
+
+    }
+
+    public static Singleton getInstance() {
+        if (instance == null) {
+            synchronized (Singleton.class) {
+                if (instance == null) {
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
+}
+
+// Bill Pugh Singleton
+
+class BillPughSingleton {
+    private static BillPughSingleton instance;
+
+    private BillPughSingleton() {
+
+    }
+
     private static class Holder {
-        private static final JudgeAnalytics INSTANCE = new JudgeAnalytics();
+        private static final BillPughSingleton instance = new BillPughSingleton();
     }
 
-    public static JudgeAnalytics getInstance() {
-        return Holder.INSTANCE;
+    public static BillPughSingleton getInstance() {
+        return Holder.instance;
     }
+
 }
 
 
 public class SingletonPatternMain {
     public static void main(String[] args) {
-        JudgeAnalytics judgeAnalytics = JudgeAnalytics.getInstance();
+        // Method - 1
+        EagerSingleton instance1 = EagerSingleton.getInstance();
+        EagerSingleton instance2 = EagerSingleton.getInstance();
+
+        System.out.println(instance1.hashCode());
+        System.out.println(instance2.hashCode());
     }
 }
 
